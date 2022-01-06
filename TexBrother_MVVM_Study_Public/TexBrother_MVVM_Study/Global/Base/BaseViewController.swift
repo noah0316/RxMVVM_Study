@@ -13,7 +13,7 @@ import RxSwift
 
 class BaseViewController: UIViewController, UIPopoverPresentationControllerDelegate {
     
-    public let disposeBag = DisposeBag()
+    public var disposeBag = DisposeBag()
     public let loadingHudTrigger = PublishSubject<Bool>()
     public var recognizer: UIPanGestureRecognizer?
     

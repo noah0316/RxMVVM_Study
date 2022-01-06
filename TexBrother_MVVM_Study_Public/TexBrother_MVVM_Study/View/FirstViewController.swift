@@ -80,6 +80,12 @@ final class FirstViewController: BaseViewController {
         layout()
         bind()
     }
+	
+	/// handling UnfinishedObservable's memory leak problem
+	override func didMove(toParent parent: UIViewController?) {
+		super.didMove(toParent: parent)
+		if parent == nil { disposeBag = DisposeBag() }
+	}
 }
 
 // MARK: - Extensions
