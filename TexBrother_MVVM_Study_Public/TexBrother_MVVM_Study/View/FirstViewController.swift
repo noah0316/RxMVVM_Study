@@ -78,7 +78,8 @@ final class FirstViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         layout()
-        bind()
+		bindInput()
+		bindOutput()
     }
 	
 	/// handling UnfinishedObservable's memory leak problem
@@ -141,11 +142,40 @@ extension FirstViewController {
     
     // MARK: - General Helpers
     
-    private func bind() {
-        let input = FirstViewModel.Input(
-            buttonClicked: buttonClickSubject,
-            textFieldString: textSubject
-        )
-        // TODO
-    }
+	private func bindInput() {
+		firstButton.rx.tap
+			.bind { self.buttonClickSubject.onNext(1) }
+			.disposed(by: disposeBag)
+		
+		secondButton.rx.tap
+			.bind { self.buttonClickSubject.onNext(2) }
+			.disposed(by: disposeBag)
+		
+		thirdButton.rx.tap
+			.bind { self.buttonClickSubject.onNext(3) }
+			.disposed(by: disposeBag)
+		
+		countTextField.rx.text.orEmpty
+			.bind(to: textSubject)
+			.disposed(by: disposeBag)
+		
+	}
+	
+	private func bindOutput() {
+		let input = FirstViewModel.Input(
+			buttonClicked: self.buttonClickSubject,
+			textFieldString: self.textSubject
+		)
+		let output = viewModel.transform(input: input)
+		
+		output.selectedButton
+			.map { $0.buttonInfo }
+			.bind(to: buttonLabel.rx.text)
+			.disposed(by: disposeBag)
+		
+		output.textCount
+			.map { String($0) }
+			.bind(to: countLabel.rx.text)
+			.disposed(by: disposeBag)
+	}
 }

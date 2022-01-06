@@ -28,7 +28,36 @@ final class FirstViewModel {
 // MARK: - Extensions
 
 extension FirstViewModel {
-//    TODO
-//    func transform (input : Input) -> Output {
-//    }
+	func transform (input : Input) -> Output {
+		let selectedItem = input.buttonClicked
+			.map {
+				self.makeButton(buttonNumber: $0)
+			}
+			.share()
+		
+		let textFieldCount = input.textFieldString
+			.map { $0.count }
+		
+		return Output(selectedButton: selectedItem, textCount: textFieldCount)
+	}
+	
+	func makeButton(buttonNumber: Int) -> ButtonModel {
+		var buttonNumberToKrString = ""
+		
+		switch buttonNumber {
+		case 1:
+			buttonNumberToKrString = "첫"
+		case 2:
+			buttonNumberToKrString = "두"
+		case 3:
+			buttonNumberToKrString = "세"
+		default :
+			buttonNumberToKrString = ""
+		}
+		
+		let buttonInfo = "\(buttonNumberToKrString) 번째 버튼입니다."
+		
+		
+		return ButtonModel(buttonNumber: buttonNumber, buttonInfo: buttonInfo)
+	}
 }
